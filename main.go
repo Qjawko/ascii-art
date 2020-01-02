@@ -2,9 +2,7 @@ package main
 
 import (
 	"bufio"
-	"errors"
 	"fmt"
-	"io"
 	"os"
 )
 
@@ -31,21 +29,6 @@ func main() {
 	for _, s := range stringArr {
 		asciiPrint(s, resultArr)
 	}
-
-	// for i := 0; i < 8; i++ {
-	// 	for _, ch := range s {
-	// 		index := int(rune(ch-32) * 9)
-	// 		//fmt.Print(index)
-	// 		letter, err := rsl("standard.txt", index+i)
-	// 		if err != nil {
-	// 			fmt.Println("rsl: ", err)
-	// 		}
-	// 		fmt.Print(string(letter[:len(letter)-1]))
-
-	// 		fmt.Println()
-	// 	}
-	// }
-
 }
 
 func StringLen(s string) int {
@@ -102,7 +85,7 @@ func checkMore(str, charset string) bool {
 }
 
 func asciiPrint(s string, src []string) {
-	for i := 0; i < 8; i++ {
+	for i := 0; i <= 8; i++ {
 		for _, ch := range s {
 			index := int(rune(ch-32) * 9)
 			fmt.Printf("%v", (src[index+i]))
@@ -118,37 +101,4 @@ func arrStringLen(arr []string) int {
 	}
 
 	return count
-}
-
-func rsl(fn string, n int) (string, error) {
-	if n < 1 {
-		return "", fmt.Errorf("invalid request: line %d", n)
-	}
-	f, err := os.Open(fn)
-	if err != nil {
-		return "", err
-	}
-	defer f.Close()
-	bf := bufio.NewReader(f)
-	var line string
-	for lnum := 0; lnum < n; lnum++ {
-		line, err = bf.ReadString('\n')
-		if err == io.EOF {
-			switch lnum {
-			case 0:
-				return "", errors.New("no lines in file")
-			case 1:
-				return "", errors.New("only 1 line")
-			default:
-				return "", fmt.Errorf("only %d lines", lnum)
-			}
-		}
-		if err != nil {
-			return "", err
-		}
-	}
-	if line == "" {
-		return "", fmt.Errorf("line %d empty", n)
-	}
-	return line, nil
 }
